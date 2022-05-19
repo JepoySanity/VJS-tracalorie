@@ -88,6 +88,10 @@ const uiController = (() => {
         .querySelector(uiSelectors.itemList)
         .insertAdjacentElement("beforeend", li);
     },
+    clearInput: () => {
+      document.querySelector(uiSelectors.itemNameInput).value = "";
+      document.querySelector(uiSelectors.itemCaloriesInput).value = "";
+    },
   };
 })();
 
@@ -105,6 +109,7 @@ const app = ((itemController, uiController) => {
     if (input.name !== "" && input.calories !== "") {
       const newItem = itemController.addItem(input.name, input.calories);
       uiController.addListItem(newItem);
+      uiController.clearInput();
     }
   };
 
