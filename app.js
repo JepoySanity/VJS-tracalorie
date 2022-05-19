@@ -1,7 +1,7 @@
 //item controller
 const itemController = (() => {
   //constructor
-  const item = (id, name, calories) => {
+  const Item = function (id, name, calories) {
     this.id = id;
     this.name = name;
     this.calories = calories;
@@ -31,7 +31,7 @@ const itemController = (() => {
 
       const parseCal = parseInt(calories);
 
-      newItem = item(id, name, parseCal);
+      newItem = new Item(id, name, parseCal);
 
       state.items.push(newItem);
 
