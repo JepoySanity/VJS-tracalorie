@@ -18,6 +18,25 @@ const itemController = (() => {
   };
 
   return {
+    getItems: () => {
+      return state.items;
+    },
+    addItem: (name, calories) => {
+      let id;
+      if (state.items.length > 0) {
+        id = state.items[state.items.length - 1].id + 1;
+      } else {
+        id = 0;
+      }
+
+      const parseCal = parseInt(calories);
+
+      newItem = item(id, name, parseCal);
+
+      state.items.push(newItem);
+
+      return newItem;
+    },
     logData: () => {
       return state;
     },
@@ -26,16 +45,64 @@ const itemController = (() => {
 
 //ui controller
 const uiController = (() => {
-  return {};
+  const uiSelectors = {
+    itemList: "#item-list",
+    addBtn: ".add-btn",
+    itemNameInput: "#item-name",
+    itemCaloriesInput: "#item-calories",
+  };
+  return {
+    populateItemList: (items) => {
+      let html = "";
+      items.forEach((item) => {
+        html += `
+        <li class="collection-item" id="item-${item.id}">
+          <strong>${item.name}: </strong> <em>${item.calories} Calories</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fa fa-pencil"></i>
+          </a>
+        </li>
+        `;
+      });
+      document.querySelector(uiSelectors.itemList).innerHTML = html;
+    },
+    getSelectors: () => {
+      return uiSelectors;
+    },
+    getItemInput: () => {
+      return {
+        name: document.querySelector(uiSelectors.itemNameInput).value,
+        calories: document.querySelector(uiSelectors.itemCaloriesInput).value,
+      };
+    },
+  };
 })();
 
 //app controller
 const app = ((itemController, uiController) => {
+  const loadEventListeners = () => {
+    const uiSelector = uiController.getSelectors();
+    document
+      .querySelector(uiSelector.addBtn)
+      .addEventListener("click", itemAddSubmit);
+  };
+  const itemAddSubmit = (e) => {
+    e.preventDefault();
+    const input = uiController.getItemInput();
+    if (input.name !== "" && input.calories !== "") {
+      const newItem = itemController.addItem(input.name, input.calories);
+    }
+  };
+
   return {
     init: () => {
       console.log("initializing app brt brt brt. . . . ");
+      const items = itemController.getItems();
+      uiController.populateItemList(items);
+      loadEventListeners();
     },
   };
 })(itemController, uiController);
 
+//initialize app
 app.init();
