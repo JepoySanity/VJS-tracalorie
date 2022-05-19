@@ -9,9 +9,9 @@ const itemController = (() => {
   //state
   const state = {
     items: [
-      { id: 0, name: "adobo", calories: 1200 },
-      { id: 1, name: "pandesal", calories: 400 },
-      { id: 2, name: "kamote", calories: 600 },
+      // { id: 0, name: "adobo", calories: 1200 },
+      // { id: 1, name: "pandesal", calories: 400 },
+      // { id: 2, name: "kamote", calories: 600 },
     ],
     currentItem: null,
     totalCalories: 0,
@@ -76,6 +76,7 @@ const uiController = (() => {
       };
     },
     addListItem: (item) => {
+      document.querySelector(uiSelectors.itemList).style.display = "block";
       const li = document.createElement("li");
       li.className = "collection-item";
       li.id = `item-${item.id}`;
@@ -87,6 +88,9 @@ const uiController = (() => {
       document
         .querySelector(uiSelectors.itemList)
         .insertAdjacentElement("beforeend", li);
+    },
+    hideList: () => {
+      document.querySelector(uiSelectors.itemList).style.display = "none";
     },
     clearInput: () => {
       document.querySelector(uiSelectors.itemNameInput).value = "";
@@ -117,7 +121,11 @@ const app = ((itemController, uiController) => {
     init: () => {
       console.log("initializing app brt brt brt. . . . ");
       const items = itemController.getItems();
-      uiController.populateItemList(items);
+      if (items.length === 0) {
+        uiController.hideList;
+      } else {
+        uiController.populateItemList(items);
+      }
       loadEventListeners();
     },
   };
