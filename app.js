@@ -75,6 +75,19 @@ const uiController = (() => {
         calories: document.querySelector(uiSelectors.itemCaloriesInput).value,
       };
     },
+    addListItem: (item) => {
+      const li = document.createElement("li");
+      li.className = "collection-item";
+      li.id = `item-${item.id}`;
+      li.innerHTML = `
+      <strong>${item.name}: </strong> <em>${item.calories} Calories</em>
+      <a href="#" class="secondary-content">
+        <i class="edit-item fa fa-pencil"></i>
+      </a>`;
+      document
+        .querySelector(uiSelectors.itemList)
+        .insertAdjacentElement("beforeend", li);
+    },
   };
 })();
 
@@ -91,6 +104,7 @@ const app = ((itemController, uiController) => {
     const input = uiController.getItemInput();
     if (input.name !== "" && input.calories !== "") {
       const newItem = itemController.addItem(input.name, input.calories);
+      uiController.addListItem(newItem);
     }
   };
 
