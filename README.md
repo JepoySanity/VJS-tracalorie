@@ -1,2 +1,2 @@
-# VJS-tracalorie
-## simple calorie tracker app using ES6 module pattern
+# Calorie Tracker
+## simple calorie tracker app that demonstrates ES6 module pattern
