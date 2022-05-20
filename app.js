@@ -202,6 +202,10 @@ const app = ((itemController, uiController) => {
     document
       .querySelector(uiSelector.updateBtn)
       .addEventListener("click", itemUpdateSubmit);
+
+    document
+      .querySelector(uiSelector.backBtn)
+      .addEventListener("click", uiController.clearEditState);
   };
 
   const itemAddSubmit = (e) => {
