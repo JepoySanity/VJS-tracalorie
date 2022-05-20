@@ -71,6 +71,14 @@ const itemController = (() => {
       });
       return found;
     },
+    deleteItem: (id) => {
+      ids = state.items.map((item) => {
+        return item.id;
+      });
+
+      const index = ids.indexOf(id);
+      state.items.splice(index, 1);
+    },
     setCurrentItem: (item) => {
       state.currentItem = item;
     },
@@ -146,6 +154,11 @@ const uiController = (() => {
         }
       });
     },
+    deleteListItem: (id) => {
+      const itemID = `#item-${id}`;
+      const item = document.querySelector(itemID);
+      item.remove();
+    },
     hideList: () => {
       document.querySelector(uiSelectors.itemList).style.display = "none";
     },
@@ -204,6 +217,10 @@ const app = ((itemController, uiController) => {
       .addEventListener("click", itemUpdateSubmit);
 
     document
+      .querySelector(uiSelector.deleteBtn)
+      .addEventListener("click", itemDeleteSubmit);
+
+    document
       .querySelector(uiSelector.backBtn)
       .addEventListener("click", uiController.clearEditState);
   };
@@ -240,6 +257,16 @@ const app = ((itemController, uiController) => {
     const totalCalories = itemController.getTotalCalories();
     uiController.showTotalCalories(totalCalories);
     uiController.clearEditState();
+  };
+
+  const itemDeleteSubmit = (e) => {
+    const currentItem = itemController.getCurrentItem();
+    itemController.deleteItem(currentItem.id);
+    uiController.deleteListItem(currentItem.id);
+    const totalCalories = itemController.getTotalCalories();
+    uiController.showTotalCalories(totalCalories);
+    uiController.clearEditState();
+    e.preventDefault();
   };
 
   return {
