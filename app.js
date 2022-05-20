@@ -159,10 +159,22 @@ const app = ((itemController, uiController) => {
       .querySelector(uiSelector.addBtn)
       .addEventListener("click", itemAddSubmit);
 
+    document.addEventListener("keypress", (e) => {
+      if (e.keyCode === 13 || e.which === 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
     document
       .querySelector(uiSelector.itemList)
+      .addEventListener("click", itemEditClick);
+
+    document
+      .querySelector(uiSelector.updateBtn)
       .addEventListener("click", itemUpdateSubmit);
   };
+
   const itemAddSubmit = (e) => {
     e.preventDefault();
     const input = uiController.getItemInput();
@@ -175,7 +187,8 @@ const app = ((itemController, uiController) => {
     }
   };
 
-  const itemUpdateSubmit = (e) => {
+  const itemEditClick = (e) => {
+    e.preventDefault();
     if (e.target.classList.contains("edit-item")) {
       const listId = e.target.parentNode.parentNode.id;
       const listArr = listId.split("-");
@@ -184,7 +197,11 @@ const app = ((itemController, uiController) => {
       itemController.setCurrentItem(itemToEdit);
       uiController.addItemToForm();
     }
+  };
+
+  const itemUpdateSubmit = (e) => {
     e.preventDefault();
+    console.log("update");
   };
 
   return {
