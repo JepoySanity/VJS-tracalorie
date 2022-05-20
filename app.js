@@ -58,6 +58,19 @@ const itemController = (() => {
       });
       return found;
     },
+    updateItem: (name, calorie) => {
+      calorie = parseInt(calorie);
+
+      let found = null;
+      state.items.forEach((item) => {
+        if (item.id === state.currentItem.id) {
+          item.name = name;
+          item.calories = calorie;
+          found = item;
+        }
+      });
+      return found;
+    },
     setCurrentItem: (item) => {
       state.currentItem = item;
     },
@@ -71,6 +84,7 @@ const itemController = (() => {
 const uiController = (() => {
   const uiSelectors = {
     itemList: "#item-list",
+    listItems: "#item-list li",
     addBtn: ".add-btn",
     updateBtn: ".update-btn",
     deleteBtn: ".delete-btn",
@@ -116,6 +130,21 @@ const uiController = (() => {
       document
         .querySelector(uiSelectors.itemList)
         .insertAdjacentElement("beforeend", li);
+    },
+    updateListItem: (item) => {
+      let listItems = document.querySelectorAll(uiSelectors.listItems);
+      listItems = Array.from(listItems);
+
+      listItems.forEach((listItem) => {
+        let itemId = listItem.getAttribute("id");
+        if (itemId === `item-${item.id}`) {
+          document.querySelector(`#${itemId}`).innerHTML = `
+          <strong>${item.name}: </strong> <em>${item.calories} Calories</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fa fa-pencil"></i>
+          </a>`;
+        }
+      });
     },
     hideList: () => {
       document.querySelector(uiSelectors.itemList).style.display = "none";
@@ -201,7 +230,12 @@ const app = ((itemController, uiController) => {
 
   const itemUpdateSubmit = (e) => {
     e.preventDefault();
-    console.log("update");
+    const input = uiController.getItemInput();
+    const updatedItem = itemController.updateItem(input.name, input.calories);
+    uiController.updateListItem(updatedItem);
+    const totalCalories = itemController.getTotalCalories();
+    uiController.showTotalCalories(totalCalories);
+    uiController.clearEditState();
   };
 
   return {
