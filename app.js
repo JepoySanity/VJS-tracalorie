@@ -1,4 +1,26 @@
 //item controller
+const storageController = (() => {
+  return {
+    storeItem: (item) => {
+      let items = [];
+      if (localStorage.getItem("items") === null) {
+        items = [];
+        //push new item
+        items.push(item);
+        //set to localstorage
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        //get data on localstorage
+        items = JSON.parse(localStorage.getItem("items"));
+        //push new item
+        items.push(item);
+        //re-set localstorage with new values
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+    },
+  };
+})();
+
 const itemController = (() => {
   //constructor
   const Item = function (id, name, calories) {
@@ -219,7 +241,7 @@ const uiController = (() => {
 })();
 
 //app controller
-const app = ((itemController, uiController) => {
+const app = ((itemController, storageController, uiController) => {
   const loadEventListeners = () => {
     const uiSelector = uiController.getSelectors();
     document
@@ -262,6 +284,8 @@ const app = ((itemController, uiController) => {
       uiController.addListItem(newItem);
       const totalCalories = itemController.getTotalCalories();
       uiController.showTotalCalories(totalCalories);
+
+      storageController.storeItem(newItem);
       uiController.clearInput();
     }
   };
@@ -321,7 +345,7 @@ const app = ((itemController, uiController) => {
       loadEventListeners();
     },
   };
-})(itemController, uiController);
+})(itemController, storageController, uiController);
 
 //initialize app
 app.init();
