@@ -2,7 +2,7 @@
 const storageController = (() => {
   return {
     storeItem: (item) => {
-      let items = [];
+      let items;
       if (localStorage.getItem("items") === null) {
         items = [];
         //push new item
@@ -18,6 +18,26 @@ const storageController = (() => {
         localStorage.setItem("items", JSON.stringify(items));
       }
     },
+
+    getItemsFromStorge: () => {
+      let items;
+      if (localStorage.getItem("items") === null) {
+        items = [];
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+      }
+
+      return items;
+    },
+    updateItemStorage: (updatedItem) => {
+      let items = JSON.parse(localStorage.getItem("items"));
+      items.forEach((item, index) => {
+        if (updatedItem.id === item.id) {
+          items.splice(index, 1, updatedItem);
+        }
+      });
+      localStorage.setItem("items", JSON.stringify(items));
+    },
   };
 })();
 
@@ -30,11 +50,7 @@ const itemController = (() => {
   };
   //state
   const state = {
-    items: [
-      // { id: 0, name: "adobo", calories: 1200 },
-      // { id: 1, name: "pandesal", calories: 400 },
-      // { id: 2, name: "kamote", calories: 600 },
-    ],
+    items: storageController.getItemsFromStorge(),
     currentItem: null,
     totalCalories: 0,
   };
@@ -309,6 +325,7 @@ const app = ((itemController, storageController, uiController) => {
     uiController.updateListItem(updatedItem);
     const totalCalories = itemController.getTotalCalories();
     uiController.showTotalCalories(totalCalories);
+    storageController.updateItemStorage(updatedItem);
     uiController.clearEditState();
   };
 
