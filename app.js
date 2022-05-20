@@ -142,6 +142,8 @@ const app = ((itemController, uiController) => {
       } else {
         uiController.populateItemList(items);
       }
+      const totalCalories = itemController.getTotalCalories();
+      uiController.showTotalCalories(totalCalories);
       loadEventListeners();
     },
   };
