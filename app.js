@@ -49,6 +49,10 @@ const storageController = (() => {
       });
       localStorage.setItem("items", JSON.stringify(items));
     },
+
+    clearItemsFromStorage: () => {
+      localStorage.removeItem("items");
+    },
   };
 })();
 
@@ -345,6 +349,7 @@ const app = ((itemController, storageController, uiController) => {
     const totalCalories = itemController.getTotalCalories();
     uiController.showTotalCalories(totalCalories);
     uiController.removeItems();
+    storageController.clearItemsFromStorage();
     uiController.hideList();
   };
 
