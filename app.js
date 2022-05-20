@@ -29,11 +29,22 @@ const storageController = (() => {
 
       return items;
     },
+
     updateItemStorage: (updatedItem) => {
       let items = JSON.parse(localStorage.getItem("items"));
       items.forEach((item, index) => {
         if (updatedItem.id === item.id) {
           items.splice(index, 1, updatedItem);
+        }
+      });
+      localStorage.setItem("items", JSON.stringify(items));
+    },
+
+    deleteItemStorage: (id) => {
+      let items = JSON.parse(localStorage.getItem("items"));
+      items.forEach((item, index) => {
+        if (id === item.id) {
+          items.splice(index, 1);
         }
       });
       localStorage.setItem("items", JSON.stringify(items));
@@ -343,6 +354,7 @@ const app = ((itemController, storageController, uiController) => {
     uiController.deleteListItem(currentItem.id);
     const totalCalories = itemController.getTotalCalories();
     uiController.showTotalCalories(totalCalories);
+    storageController.deleteItemStorage(currentItem.id);
     uiController.clearEditState();
     e.preventDefault();
   };
